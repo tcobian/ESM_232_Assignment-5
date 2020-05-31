@@ -1,0 +1,74 @@
+---
+title: "Assignment#5"
+author: "Tyler Cobian"
+date: "5/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load in the packages
+```{r}
+library(tidyverse)
+library(chron)
+```
+
+Streamflow model from class
+```{r}
+# read in the model data
+sager = read.table("sager.txt", header=T)
+head(sager)
+
+# read in the multiple model data
+sagerm = read.table("sagerm.txt", header=T)
+head(sagerm)
+
+# Add a date to the data
+sager$date = seq.dates(from="10/1/1965", length=nrow(sager))
+
+# Vizualise the model perfomrance
+ggplot(sagerl, aes(date, str, col=source, linetype=source))+geom_line()+scale_y_continuous(trans="log")+labs(y="streamflow mm/day")
+
+```
+
+Write a function to evaluate model performance
+```{r}
+# model to avaluate the model performance
+model_perf<- function(m, o){
+  err = m - 0
+  mean_o = mean(o)
+  mean_err = mean(err)
+  fit = mean_o - mean_err
+  return(fit)
+}
+
+# apply this metric to the sager data
+model_perf(m = sager$model, o = sager$obs)
+
+# loop this inlto the sager data frame
+for (i in length(sager$model)) {
+  sager$fit = model_perf(m = sager$model, o = sager$obs)
+}
+```
+
+Apply to sagerm with multiple model runs
+```{r}
+# apply the model kfit metric to the sagerm data
+fit_2 = sagerm %>%  
+  apply(2, model_perf, o = sager$obs)
+fit_2
+```
+
+
+
+
+
+
+
+
+
+
+
+
