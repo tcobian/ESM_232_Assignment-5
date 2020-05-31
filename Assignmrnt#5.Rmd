@@ -6,7 +6,10 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = TRUE,
+                      error = FALSE,
+                      warning = FALSE)
 ```
 
 Load in the packages
@@ -27,10 +30,6 @@ head(sagerm)
 
 # Add a date to the data
 sager$date = seq.dates(from="10/1/1965", length=nrow(sager))
-
-# Vizualise the model perfomrance
-ggplot(sagerl, aes(date, str, col=source, linetype=source))+geom_line()+scale_y_continuous(trans="log")+labs(y="streamflow mm/day")
-
 ```
 
 Write a function to evaluate model performance
